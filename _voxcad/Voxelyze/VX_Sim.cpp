@@ -516,7 +516,9 @@ This function sets or resets the entire simulation with the new environment.
 bool CVX_Sim::Import(CVX_Environment* pEnvIn, CMesh* pSurfMeshIn, std::string* RetMessage)
 {
 	ClearAll(); //clears out all arrays and stuff
-	//Sim_Client.Bind();
+#ifdef USING_COMMUNICATION
+	Sim_Client.Bind();
+	#endif
 	if (pEnvIn != NULL) pEnv = pEnvIn;
 
 	if (pEnv == NULL) {if (RetMessage) *RetMessage += "Invalid Environment pointer"; return false;}
@@ -1811,8 +1813,8 @@ bool CVX_Sim::Integrate()
 	
 	//Update positions... need to do this seperately if we're going to do damping in the summing forces stage.
 	iT = NumVox();
-	
-	if (0&&CurStepCount%Control_rate == 0)
+#ifdef USING_COMMUNICATION
+	if (CurStepCount%Control_rate == 0)
 	{
 		Sim_Client.recv_block();
 		Sim_Client.command_process(command);
@@ -1823,7 +1825,7 @@ bool CVX_Sim::Integrate()
 			return 0;
 		//wait and update command
 	}
-	
+#endif	
 	GetSegmentLocation(u);	
 	std::ofstream Record_file_E,Record_file_I,Record_file_f,Record_file_u,Record_file_du;
 	Record_file_u.open("./Record_u_turn_1.txt",std::ios::app);

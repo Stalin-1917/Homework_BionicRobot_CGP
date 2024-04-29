@@ -98,7 +98,9 @@ public:
 	CVX_Sim(void); //!< Constructor
 	~CVX_Sim(void); //!< Destructor
 	CVX_Sim& operator=(const CVX_Sim& rSim); //!< Overload "=" 
+#ifdef USING_COMMUNICATION
 	Client Sim_Client;
+#endif
 	//I/O function for save/loading
 	void SaveVXAFile(std::string filename);
 	bool LoadVXAFile(std::string filename, std::string* pRetMsg = NULL);
